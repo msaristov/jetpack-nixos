@@ -232,6 +232,16 @@ let
         patchelf $out/lib/libcudnn.so --add-needed libcudnn_cnn_infer.so
       '';
     };
+    cupva = buildFromDebs {
+        buildInputs = (with l4t; [ l4t-nvsci l4t-pva l4t-cuda ]);
+        name = "cupva";
+        version = debs.common."cupva-2.3-l4t".version;
+        srcs = debs.common."cupva-2.3-l4t".src;
+        postPatch = ''
+          cp -r opt/nvidia/cupva-2.3/lib/aarch64-linux-gnu/. lib
+          rm -rf opt share
+        '';
+    };
     libcublas = buildFromSourcePackage { name = "libcublas"; };
     libcufft = buildFromSourcePackage { name = "libcufft"; };
     libcurand = buildFromSourcePackage { name = "libcurand"; };
@@ -408,6 +418,7 @@ let
           cuda_nvtx
           cuda_sanitizer_api
           cuda_profiler_api
+          cupva
           libcublas
           libcufft
           libcurand
@@ -475,7 +486,7 @@ let
       srcs = [ debs.common.libnvvpi2.src debs.common.vpi2-dev.src ];
       sourceRoot = "source/opt/nvidia/vpi2";
       buildInputs = (with l4t; [ l4t-core l4t-cuda l4t-nvsci l4t-3d-core l4t-multimedia l4t-pva ])
-        ++ (with cudaPackages; [ libcufft libnpp ]);
+        ++ (with cudaPackages; [ libcufft libnpp cupva ]);
       patches = [ ./vpi2.patch ];
       postPatch = ''
         rm -rf etc

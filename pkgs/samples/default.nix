@@ -6,6 +6,8 @@
 , autoAddOpenGLRunpathHook
 , freeimage
 , cmake
+, vulkan-headers
+, vulkan-loader
 , opencv
 , opencv2
 , libX11
@@ -229,7 +231,7 @@ let
     sourceRoot = "source/usr/src/jetson_multimedia_api";
 
     nativeBuildInputs = [ dpkg python3 ];
-    buildInputs = [ libX11 libdrm libglvnd opencv2 ]
+    buildInputs = [ libX11 libdrm libglvnd opencv2 vulkan-headers vulkan-loader ]
       ++ (with l4t; [ l4t-cuda l4t-multimedia l4t-camera ])
       ++ (with cudaPackages; [ cudatoolkit tensorrt ]);
 
